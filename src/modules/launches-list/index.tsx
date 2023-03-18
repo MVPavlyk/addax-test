@@ -11,6 +11,7 @@ import LaunchDetailsModal from './components/launch-details-modal';
 import useComponentVisible from '../common/hooks/useComponentVisible';
 
 import arrow from '../../assets/up_arrow.svg';
+import Preloader from './components/preloader';
 
 const LaunchesList = () => {
   const { launches, status, totalPages } = useSelector(state => state['launchesReducers']);
@@ -116,11 +117,15 @@ const LaunchesList = () => {
         isOnlySuccess={isOnlySuccess}
         setIsOnlySuccess={setIsOnlySuccess}
       />
-      <LaunchesWrapper>
-        {!!launches.length && launches.map((launch) =>
-          <LaunchBlock setLaunchForModal={setLaunchForModal} data={launch} key={launch.id} />
-        )}
-      </LaunchesWrapper>
+      {status === 'pending' && pageNumber === 1 ?
+        <Preloader />
+        :
+        <LaunchesWrapper>
+          {launches.length ? launches.map((launch) =>
+            <LaunchBlock setLaunchForModal={setLaunchForModal} data={launch} key={launch.id} />
+          ) : 'No launches with such criteria'}
+        </LaunchesWrapper>
+      }
       <ScrollTopBtn onClick={() => window.scroll(0, 0)} theme={{ visible: scrollTop > window.innerHeight }}>
         <ScrollUpBtnImg src={arrow} alt='arrow' />
       </ScrollTopBtn>
